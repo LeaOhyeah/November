@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
+use App\Models\City;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProjectControllerResource;
+use App\Http\Controllers\ProjectDetailControllerResource;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +22,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::resource('project', ProjectControllerResource::class);
+Route::get('/get-cities', [ProjectControllerResource::class, 'getCities']);
+
+Route::resource('projectdetail', ProjectDetailControllerResource::class);

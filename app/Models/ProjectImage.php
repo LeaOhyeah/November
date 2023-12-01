@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectImage extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }

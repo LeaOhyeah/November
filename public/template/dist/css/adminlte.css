@@ -33918,7 +33918,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 .direct-chat-messages {
   -webkit-transform: translate(0, 0);
   transform: translate(0, 0);
-  height: 250px;
+  height: 390px;
   overflow: auto;
   padding: 10px;
 }

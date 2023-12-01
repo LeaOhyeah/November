@@ -22,6 +22,6 @@ class DashboardController extends Controller
                 // ->whereYear('start_date', Carbon::today()->year)
                 ->count(),
         ];
-        return view('layout.homepage', $data);
+        return view('dashboard_staff.main', $data);
     }
 }
