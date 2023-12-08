@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Project;
 use App\Models\Province;
-use App\Models\ProjectDetail;
+use App\Models\CommentDetail;
 use Illuminate\Http\Request;
 use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
@@ -24,6 +24,8 @@ class ProjectControllerResource extends Controller
             'projects' => Project::with('city')->get(),
         ];
 
+        // ddd($data);
+
         return view('dashboard_staff.index_project', $data);
     }
 
@@ -38,6 +40,8 @@ class ProjectControllerResource extends Controller
             'cities' => City::all(),
         ];
 
+        // ddd($data);
+
         return view('dashboard_staff.form_project', $data);
     }
 
@@ -45,6 +49,8 @@ class ProjectControllerResource extends Controller
     {
         $provinceId = $request->input('province_id');
         $cities = City::where('province_id', $provinceId)->get();
+
+        // ddd($cities);
 
         return response()->json($cities);
     }
@@ -69,6 +75,8 @@ class ProjectControllerResource extends Controller
             'lat' => $request->lat,
             'long' => $request->long,
         ];
+
+        // ddd($data);
 
         if (Project::create($data)) {
             return "Success";
@@ -96,9 +104,13 @@ class ProjectControllerResource extends Controller
         $data = [
             'provinces' => Province::all(),
             'cities' => City::all(),
-            'project' => Project::find($id),
-            'project_details' => ProjectDetail::oldest('created_at')->get(),
+            // 'project' => Project::with('project_detail')->where('id', $id)->first(),
+            'project' => Project::with('project_detail' , 'comment_detail')->where('id', $id)->first(),
+
+            // 'project_details' => ProjectDetail::oldest('created_at')->where('project_id', $id)->get(),
         ];
+        
+        // ddd($data);
 
         return view('dashboard_staff.edit_project', $data);
     }
@@ -123,6 +135,8 @@ class ProjectControllerResource extends Controller
             'lat' => $request->lat,
             'long' => $request->long,
         ];
+
+        // ddd($data);
 
         if (Project::where('id', $id)->update($data)) {
             return "success";

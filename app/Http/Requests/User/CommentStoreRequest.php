@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Project;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class CommentStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,9 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'province_id' => 'required',
-            'city_id' => 'required',
-            'name' => 'required',
-            'description' => 'required|max:900',
-            'budget' => 'required|integer|min:1',
-            'start_date' => 'required',
-            'status' => 'required',
+            'user_id' => 'required',
+            'project_detail_id' => 'required',
+            'body' => 'required|max: 255',
         ];
     }
 }

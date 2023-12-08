@@ -6,10 +6,23 @@
     <link rel="stylesheet" href="{{ asset('template/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 @endsection
 
+@section('title', 'Proyek Aktif')
+
 @section('content')
+
+    @if (session()->has('success'))
+        <div class="alert alert-default-info" role="alert">
+            <b> {{ session('success') }} </b>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span
+                    aria-hidden="true">&times;</span> </button>
+        </div>
+    @endif
+
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title text-bold">Data Proyek</h3>
+            <a class="btn btn-primary float-right" href="{{ route('staff.projectCreate') }}">Tamba Data<i
+                    class="fas fa-plus ml-2"></i></a>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -19,35 +32,19 @@
                         <th>#</th>
                         <th>Nama Projek</th>
                         <th>Kota / Kab</th>
-                        <th>Status</th>
                         <th>Tanggal Mulai</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($projects as $project)
+                    @foreach ($activeProjects as $project)
                         <tr>
                             <td><a class="text-dark"
-                                    href="{{ route('project.edit', $project->id) }}">{{ $loop->iteration }}</a></td>
+                                    href="{{ route('staff.projectActive', $project->id) }}">{{ $loop->iteration }}</a></td>
                             <td><a class="text-dark"
-                                    href="{{ route('project.edit', $project->id) }}">{{ $project->name }}</a></td>
+                                    href="{{ route('staff.projectActive', $project->id) }}">{{ $project->name }}</a></td>
                             <td><a class="text-dark"
-                                    href="{{ route('project.edit', $project->id) }}">{{ $project->city->name }}</a></td>
-                            <td><a class="text-dark" href="{{ route('project.edit', $project->id) }}">
-                                    @switch($project->status)
-                                        @case(0)
-                                            Aktif
-                                        @break
-
-                                        @case(1)
-                                            Non Aktif
-                                        @break
-
-                                        @default
-                                            Selesai
-                                    @endswitch
-                                </a></td>
-                            <td><a class="text-dark" href="">{{ $project->start_date }}</a></td>
-
+                                    href="{{ route('staff.projectActive', $project->id) }}">{{ $project->city->name }}</a></td>
+                            <td><a class="text-dark" href="{{ route('staff.projectActive', $project->id) }}">{{ $project->start_date }}</a></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -56,7 +53,6 @@
                         <th>#</th>
                         <th>Nama Projek</th>
                         <th>Kota / Kab</th>
-                        <th>Status</th>
                         <th>Tanggal Mulai</th>
                     </tr>
                 </tfoot>

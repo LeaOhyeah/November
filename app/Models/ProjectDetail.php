@@ -15,4 +15,14 @@ class ProjectDetail extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function comment_detail()
+    {
+        return $this->hasMany(CommentDetail::class);
+    }
+
+    public function getCommentCountAttribute(): int
+    {
+        return (int) $this->comment_detail()->where('project_detail_id', $this->id)->count();
+    }
 }

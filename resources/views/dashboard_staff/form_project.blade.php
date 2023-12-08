@@ -25,7 +25,15 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('project.store') }}" method="POST">
+    @if (session()->has('error'))
+        <div class="alert alert-default-danger" role="alert">
+            <b> {{ session('error') }} </b>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span
+                    aria-hidden="true">&times;</span> </button>
+        </div>
+    @endif
+
+    <form action="{{ route('staff.storeProject') }}" method="POST">
         @csrf
         <div class="card card-primary">
 
@@ -36,7 +44,8 @@
             <div class="card-body">
                 <div class="row">
 
-                    <div class="col-md-3">
+                    {{-- provinsi --}}
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Provinsi</label>
                             <select name="province_id" id="province_id" class="form-control select2" style="width: 100%;">
@@ -52,11 +61,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    {{-- kota --}}
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Kabupaten / Kota</label>
-                            <select name="city_id" id="city_id" class="form-control select2" style="width: 100%;">
-                                <option>Pilih Kota</option>
+                            <select name="city_id" id="city_id"
+                                class="form-control @error('city_id') is-invalid @enderror select2" style="width: 100%;">
+                                <option value="">Pilih Kota</option>
                                 @foreach ($cities as $city)
                                     @if (old('city_id') == $city->id)
                                         <option value="{{ $city->id }}" selected="selected">{{ $city->name }}
@@ -65,75 +76,107 @@
                                     <option value="{{ $city->id }}">{{ $city->name }}</option>
                                 @endforeach
                             </select>
+                            @error('city_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    {{-- anggaran --}}
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="budget">Anggaran</label>
-                            <input value="{{ old('budget') }}" type="number" class="form-control" id="budget"
-                                name="budget">
+                            <input value="{{ old('budget') }}" type="number"
+                                class="form-control @error('budget') is-invalid @enderror" id="budget" name="budget">
+                            @error('budget')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    {{-- nama --}}
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="name">Nama Proyek</label>
+                            <input value="{{ old('name') }}" type="text"
+                                class="form-control @error('name') is-invalid @enderror" id="name" name="name">
+                            @error('name')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+
+                    {{-- tanggal mulai --}}
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Tanggal Mulai</label>
                             <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                 <input name="start_date" value="{{ old('start_date') }}" type="text"
-                                    class="form-control datetimepicker-input" data-target="#reservationdate" />
+                                    class="form-control @error('start_date') is-invalid @enderror datetimepicker-input "
+                                    data-target="#reservationdate" />
                                 <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
                             </div>
+                            @error('start_date')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
 
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="name">Nama Proyek</label>
-                            <input value="{{ old('name') }}" type="text" class="form-control" id="name"
-                                name="name">
-                        </div>
-                    </div>
+                    {{-- status --}}
+                    <input type="hidden" value="0" name="status">
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select name="status" class="form-control" style="width: 100%;">
-                                @if (old('status') == '0')
-                                    <option value="0">Aktif</option>
-                                @elseif (old('status') == '1')
-                                    <option value="1">Non Aktif</option>
-                                @else
-                                    <option value="0">Aktif</option>
-                                    <option value="1">Non Aktif</option>
-                                @endif
-                                {{-- <option>Selesai</option> --}}
-                            </select>
-                        </div>
-                    </div>
-
+                    {{-- deskripsi --}}
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="description">Deskripsi</label>
-                            <textarea id="description" class="form-control" rows="7" name="description">{{ old('description') }}</textarea>
+                            <textarea id="description" class="form-control @error('description') is-invalid @enderror" rows="7"
+                                name="description">{{ old('description') }}</textarea>
+                            @error('description')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     </div>
 
+
                     <div class="col-md-12">
+
+                        <div class="form-group">
+                            <label>Lokasi</label>
+                            <input type="hidden" class="@error('lat') is-invalid @enderror" id="lat" name="lat"
+                                placeholder="Enter Latitude">
+                            <input type="hidden" id="long" name="long" placeholder="Enter Longitude">
+                            @error('lat')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
                         <div id="map"><button class="btn btn-info border-dark floating-button" id="myLocation"
-                                type="button">Lokasi
-                                Saya</button></div>
+                                type="button">Lokasi Saya</button>
+                        </div>
+
                     </div>
-                    <input type="hidden" id="lat" name="lat" placeholder="Enter Latitude">
-                    <input type="hidden" id="long" name="long" placeholder="Enter Longitude">
 
                 </div>
             </div>
 
             <div class="card-footer">
-                <button class="btn btn-primary">Simpan</button>
+                <button class="btn btn-primary float-left text-bold">Simpan</button>
+                <a href="{{ route('staff.projectsActive') }}" class="btn btn-secondary float-right">Kembali</a>
             </div>
         </div>
     </form>
@@ -220,7 +263,6 @@
                     },
                     success: function(data) {
                         $('#city_id').empty();
-                        $('#city_id').append('<option value="">Pilih Kota</option>');
 
                         $.each(data, function(index, city) {
                             $('#city_id').append('<option value="' + city.id + '">' +

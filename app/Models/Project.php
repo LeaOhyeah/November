@@ -35,4 +35,9 @@ class Project extends Model
     {
         return $this->belongsTo(City::class);
     }
+
+    public function comment_detail()
+    {
+        return $this->hasManyThrough(CommentDetail::class, ProjectDetail::class);
+    }
 }
